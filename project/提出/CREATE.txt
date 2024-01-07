@@ -1,0 +1,319 @@
+
+CREATE TABLE customer
+(
+	customer_id          INTEGER  NOT NULL ,
+	email                VARCHAR(50)  NOT NULL ,
+	name                 VARCHAR(20)  NOT NULL ,
+	address              VARCHAR(30)  NOT NULL ,
+	phone_number         CHAR(30)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKcustomer ON customer
+(customer_id   ASC);
+
+ALTER TABLE customer
+	ADD CONSTRAINT  XPKcustomer PRIMARY KEY (customer_id);
+
+CREATE TABLE bill
+(
+	bill_number          INTEGER  NOT NULL ,
+	customer_id          INTEGER  NULL ,
+	monthly_amount       DECIMAL(19,4)  NOT NULL ,
+	due_data             DATE  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKbill ON bill
+(bill_number   ASC);
+
+ALTER TABLE bill
+	ADD CONSTRAINT  XPKbill PRIMARY KEY (bill_number);
+
+CREATE TABLE contract
+(
+	contract_id          INTEGER  NOT NULL ,
+	customer_id          INTEGER  NULL ,
+	start_date           DATE  NOT NULL ,
+	end_date             DATE  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKcontract ON contract
+(contract_id   ASC);
+
+ALTER TABLE contract
+	ADD CONSTRAINT  XPKcontract PRIMARY KEY (contract_id);
+
+CREATE TABLE shipper
+(
+	package_id           INTEGER  NOT NULL ,
+	service_id           INTEGER  NOT NULL ,
+	type_id              INTEGER  NULL ,
+	customer_id          INTEGER  NOT NULL ,
+	recipient_id         INTEGER  NULL ,
+	description          VARCHAR(30)  NULL ,
+	delivery_status      CHAR(18)  NULL ,
+	delivery_time        TIMESTAMP  NULL 
+);
+
+CREATE UNIQUE INDEX XPKshipper ON shipper
+(package_id   ASC);
+
+ALTER TABLE shipper
+	ADD CONSTRAINT  XPKshipper PRIMARY KEY (package_id);
+
+CREATE TABLE costoms_declaration
+(
+	package_id           INTEGER  NOT NULL ,
+	description          VARCHAR(20)  NULL ,
+	value                DECIMAL(19,4)  NULL 
+);
+
+CREATE UNIQUE INDEX XPKcostoms_declaration ON costoms_declaration
+(package_id   ASC);
+
+ALTER TABLE costoms_declaration
+	ADD CONSTRAINT  XPKcostoms_declaration PRIMARY KEY (package_id);
+
+CREATE TABLE ordering
+(
+	order_number         INTEGER  NOT NULL ,
+	customer_id          INTEGER  NOT NULL ,
+	package_id           INTEGER  NOT NULL ,
+	order_time           TIMESTAMP  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKordering ON ordering
+(order_number   ASC);
+
+ALTER TABLE ordering
+	ADD CONSTRAINT  XPKordering PRIMARY KEY (order_number);
+
+CREATE TABLE pacage_type
+(
+	type_id              INTEGER  NOT NULL ,
+	description          VARCHAR(30)  NULL ,
+	weight               DECIMAL(10,2)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKpacage_type ON pacage_type
+(type_id   ASC);
+
+ALTER TABLE pacage_type
+	ADD CONSTRAINT  XPKpacage_type PRIMARY KEY (type_id);
+
+CREATE TABLE Hazardous_Material
+(
+	hazardous_id         INTEGER  NOT NULL ,
+	amount               DECIMAL(10,3)  NULL ,
+	package_id           INTEGER  NOT NULL ,
+	type_id              INTEGER  NULL 
+);
+
+CREATE UNIQUE INDEX XPKHazardous_Material ON Hazardous_Material
+(hazardous_id   ASC);
+
+ALTER TABLE Hazardous_Material
+	ADD CONSTRAINT  XPKHazardous_Material PRIMARY KEY (hazardous_id);
+
+CREATE TABLE payment
+(
+	order_number         INTEGER  NOT NULL ,
+	customer_id          INTEGER  NOT NULL ,
+	payment_method       CHAR(18)  NOT NULL ,
+	account_number       INTEGER  NULL ,
+	card_number          INTEGER  NULL 
+);
+
+CREATE UNIQUE INDEX XPKpayment ON payment
+(order_number   ASC,customer_id   ASC);
+
+ALTER TABLE payment
+	ADD CONSTRAINT  XPKpayment PRIMARY KEY (order_number,customer_id);
+
+CREATE TABLE recipient
+(
+	recipient_id         INTEGER  NOT NULL ,
+	name                 VARCHAR(20)  NOT NULL ,
+	address              VARCHAR(20)  NOT NULL ,
+	phone_number         VARCHAR(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKrecipient ON recipient
+(recipient_id   ASC);
+
+ALTER TABLE recipient
+	ADD CONSTRAINT  XPKrecipient PRIMARY KEY (recipient_id);
+
+CREATE TABLE service
+(
+	service_id           INTEGER  NOT NULL ,
+	type_id              INTEGER  NULL ,
+	price                DECIMAL(19,4)  NULL 
+);
+
+CREATE UNIQUE INDEX XPKservice ON service
+(service_id   ASC);
+
+ALTER TABLE service
+	ADD CONSTRAINT  XPKservice PRIMARY KEY (service_id);
+
+CREATE TABLE shipment_company
+(
+	shipment_id          INTEGER  NOT NULL ,
+	package_id           INTEGER  NOT NULL ,
+	delivery_time        TIMESTAMP  NULL ,
+	pickup_timestamp     TIMESTAMP  NOT NULL ,
+	promise_timestamp    TIMESTAMP  NULL ,
+	location             VARCHAR(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKshipment_company ON shipment_company
+(shipment_id   ASC);
+
+ALTER TABLE shipment_company
+	ADD CONSTRAINT  XPKshipment_company PRIMARY KEY (shipment_id);
+
+CREATE TABLE shipper_shipment_company
+(
+	package_id           INTEGER  NOT NULL ,
+	shipment_id          INTEGER  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKshipper_shipment_company ON shipper_shipment_company
+(package_id   ASC,shipment_id   ASC);
+
+ALTER TABLE shipper_shipment_company
+	ADD CONSTRAINT  XPKshipper_shipment_company PRIMARY KEY (package_id,shipment_id);
+
+CREATE TABLE vehicle
+(
+	vehicle_id           INTEGER  NOT NULL ,
+	type_plane_truck_    CHAR(6)  NOT NULL ,
+	status               VARCHAR(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKvehicle ON vehicle
+(vehicle_id   ASC);
+
+ALTER TABLE vehicle
+	ADD CONSTRAINT  XPKvehicle PRIMARY KEY (vehicle_id);
+
+CREATE TABLE tracking
+(
+	tracking_number      INTEGER  NOT NULL ,
+	shipment_id          INTEGER  NOT NULL ,
+	vehicle_id           INTEGER  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKtracking ON tracking
+(tracking_number   ASC);
+
+ALTER TABLE tracking
+	ADD CONSTRAINT  XPKtracking PRIMARY KEY (tracking_number);
+
+CREATE TABLE warehouse
+(
+	warehouse_id         INTEGER  NOT NULL ,
+	location             VARCHAR(20)  NULL 
+);
+
+CREATE UNIQUE INDEX XPKwarehose ON warehouse
+(warehouse_id   ASC);
+
+ALTER TABLE warehouse
+	ADD CONSTRAINT  XPKwarehose PRIMARY KEY (warehouse_id);
+
+CREATE TABLE history
+(
+	warehouse_id         INTEGER  NOT NULL ,
+	shipment_id          INTEGER  NOT NULL ,
+	timestamp            TIMESTAMP  NULL ,
+	status               VARCHAR(20)  NULL 
+);
+
+CREATE UNIQUE INDEX XPKhistory ON history
+(warehouse_id   ASC,shipment_id   ASC);
+
+ALTER TABLE history
+	ADD CONSTRAINT  XPKhistory PRIMARY KEY (warehouse_id,shipment_id);
+
+ALTER TABLE bill
+	ADD (
+CONSTRAINT R_44 FOREIGN KEY (customer_id) REFERENCES customer (customer_id) ON DELETE SET NULL);
+
+ALTER TABLE contract
+	ADD (
+CONSTRAINT R_49 FOREIGN KEY (customer_id) REFERENCES customer (customer_id) ON DELETE SET NULL);
+
+ALTER TABLE shipper
+	ADD (
+CONSTRAINT R_6 FOREIGN KEY (service_id) REFERENCES service (service_id));
+
+ALTER TABLE shipper
+	ADD (
+CONSTRAINT R_41 FOREIGN KEY (customer_id) REFERENCES customer (customer_id));
+
+ALTER TABLE shipper
+	ADD (
+CONSTRAINT R_47 FOREIGN KEY (type_id) REFERENCES pacage_type (type_id) ON DELETE SET NULL);
+
+ALTER TABLE shipper
+	ADD (
+CONSTRAINT R_65 FOREIGN KEY (recipient_id) REFERENCES recipient (recipient_id) ON DELETE SET NULL);
+
+ALTER TABLE costoms_declaration
+	ADD (
+CONSTRAINT R_17 FOREIGN KEY (package_id) REFERENCES shipper (package_id));
+
+ALTER TABLE ordering
+	ADD (
+CONSTRAINT R_27 FOREIGN KEY (customer_id) REFERENCES customer (customer_id));
+
+ALTER TABLE ordering
+	ADD (
+CONSTRAINT R_28 FOREIGN KEY (package_id) REFERENCES shipper (package_id));
+
+ALTER TABLE Hazardous_Material
+	ADD (
+CONSTRAINT R_16 FOREIGN KEY (package_id) REFERENCES shipper (package_id));
+
+ALTER TABLE Hazardous_Material
+	ADD (
+CONSTRAINT R_62 FOREIGN KEY (type_id) REFERENCES pacage_type (type_id) ON DELETE SET NULL);
+
+ALTER TABLE payment
+	ADD (
+CONSTRAINT R_59 FOREIGN KEY (customer_id) REFERENCES customer (customer_id));
+
+ALTER TABLE payment
+	ADD (
+CONSTRAINT R_60 FOREIGN KEY (order_number) REFERENCES ordering (order_number));
+
+ALTER TABLE service
+	ADD (
+CONSTRAINT R_48 FOREIGN KEY (type_id) REFERENCES pacage_type (type_id) ON DELETE SET NULL);
+
+ALTER TABLE shipper_shipment_company
+	ADD (
+CONSTRAINT R_19 FOREIGN KEY (package_id) REFERENCES shipper (package_id));
+
+ALTER TABLE shipper_shipment_company
+	ADD (
+CONSTRAINT R_20 FOREIGN KEY (shipment_id) REFERENCES shipment_company (shipment_id));
+
+ALTER TABLE tracking
+	ADD (
+CONSTRAINT R_42 FOREIGN KEY (shipment_id) REFERENCES shipment_company (shipment_id));
+
+ALTER TABLE tracking
+	ADD (
+CONSTRAINT R_58 FOREIGN KEY (vehicle_id) REFERENCES vehicle (vehicle_id) ON DELETE SET NULL);
+
+ALTER TABLE history
+	ADD (
+CONSTRAINT R_56 FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id));
+
+ALTER TABLE history
+	ADD (
+CONSTRAINT R_64 FOREIGN KEY (shipment_id) REFERENCES shipment_company (shipment_id));
+
+
